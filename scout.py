@@ -2,6 +2,7 @@ import os
 import time
 import json
 import requests
+from datetime import datetime
 
 # Configuration
 API_KEY = os.environ.get("RIOT_API_KEY")
@@ -26,9 +27,21 @@ def get_puuid(game_name, tag_line):
     return data.get("puuid") if data else None
 
 def get_tourney_matches(puuid):
-    # type=tourney strictly filters for custom/tournament draft games
     url = f"{BASE_URL}/lol/match/v5/matches/by-puuid/{puuid}/ids?type=tourney&start=0&count=20"
     return safe_request(url) or []
+
+def get_match_date(match_id):
+    """Fetches the match payload to extract the creation date."""
+    url = f"{BASE_URL}/lol/match/v5/matches/{match_id}"
+    data = safe_request(url)
+    
+    if data and "info" in data and "gameCreation" in data["info"]:
+        # Riot provides gameCreation in milliseconds
+        timestamp_ms = data["info"]["gameCreation"]
+        timestamp_s = timestamp_ms / 1000.0
+        # Convert to YYYY-MM-DD HH:MM:SS
+        return datetime.utcfromtimestamp(timestamp_s).strftime('%Y-%m-%d %H:%M:%S')
+    return "Unknown Date"
 
 def process_teams():
     with open(DB_FILE, "r") as f:
@@ -48,16 +61,37 @@ def process_teams():
             for match_id in matches:
                 match_tally[match_id] = match_tally.get(match_id, 0) + 1
                 
-        # 2. Intersect: Only keep games where at least 4 out of 5 players were present
-        # (Allows for 1 substitute player without breaking the scout logic)
-        team_games = [m_id for m_id, count in match_tally.items() if count >= 4]
+        # 2. Setup existing games tracking to avoid redundant API calls for dates
+        existing_games = team.get("discovered_games", [])
         
-        # 3. Update Database (deduplicating existing games)
-        existing_games = set(team.get("discovered_games", []))
-        updated_games = list(existing_games.union(set(team_games)))
-        team["discovered_games"] = sorted(updated_games, reverse=True)
+        # Handle migration if you already have old string IDs in the JSON
+        migrated_games = []
+        for g in existing_games:
+            if isinstance(g, str):
+                migrated_games.append({"id": g, "date": "Unknown Date (Migrated)"})
+            else:
+                migrated_games.append(g)
+                
+        existing_ids = {g["id"] for g in migrated_games}
         
-        print(f"Found {len(team_games)} team games.")
+        # 3. Intersect and fetch dates ONLY for new games
+        new_games_count = 0
+        for match_id, count in match_tally.items():
+            # If 4+ players share the match AND it's not already in our database
+            if count >= 4 and match_id not in existing_ids:
+                print(f"New team game found: {match_id}. Fetching date...")
+                match_date = get_match_date(match_id)
+                migrated_games.append({
+                    "id": match_id,
+                    "date": match_date
+                })
+                existing_ids.add(match_id)
+                new_games_count += 1
+                
+        # Sort games by ID (which generally sorts by time since newer IDs are larger)
+        team["discovered_games"] = sorted(migrated_games, key=lambda x: x["id"], reverse=True)
+        
+        print(f"Added {new_games_count} new games for {team['team_name']}.")
 
     # 4. Save results
     with open(DB_FILE, "w") as f:
