@@ -1,0 +1,13 @@
+[
+  {
+    "team_name": "Target Esports",
+    "players": [
+      {"gameName": "PlayerOne", "tagLine": "EUW"},
+      {"gameName": "PlayerTwo", "tagLine": "EUW"},
+      {"gameName": "PlayerThree", "tagLine": "EUW"},
+      {"gameName": "PlayerFour", "tagLine": "EUW"},
+      {"gameName": "PlayerFive", "tagLine": "EUW"}
+    ],
+    "discovered_games": []
+  }
+]
