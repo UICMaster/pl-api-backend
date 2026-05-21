@@ -2,12 +2,43 @@
   {
     "team_name": "INT eSports",
     "players": [
-      {"gameName": "INT PlatinPeaker", "tagLine": "INT"},
-      {"gameName": "INT Elowatcher", "tagLine": "Noc"},
-      {"gameName": "INT Centre", "tagLine": "EUW"},
-      {"gameName": "INT Kenski", "tagLine": "EUW"},
-      {"gameName": "INT James Otter", "tagLine": "007"}
+      {
+        "gameName": "INT PlatinPeaker",
+        "tagLine": "INT"
+      },
+      {
+        "gameName": "INT Elowatcher",
+        "tagLine": "Noc"
+      },
+      {
+        "gameName": "INT Centre",
+        "tagLine": "EUW"
+      },
+      {
+        "gameName": "INT Kenski",
+        "tagLine": "EUW"
+      },
+      {
+        "gameName": "INT James Otter",
+        "tagLine": "007"
+      }
     ],
-    "discovered_games": []
+    "discovered_games": [
+      "EUW1_7711804928",
+      "EUW1_7711712796",
+      "EUW1_7704691399",
+      "EUW1_7704586075",
+      "EUW1_7697014291",
+      "EUW1_7696883636",
+      "EUW1_7696778767",
+      "EUW1_7681166568",
+      "EUW1_7681057092",
+      "EUW1_7680949247",
+      "EUW1_7673489149",
+      "EUW1_7673421003",
+      "EUW1_7671236301",
+      "EUW1_7671135812",
+      "EUW1_7671044103"
+    ]
   }
 ]
