@@ -1,12 +1,12 @@
 [
   {
-    "team_name": "Target Esports",
+    "team_name": "INT eSports",
     "players": [
-      {"gameName": "PlayerOne", "tagLine": "EUW"},
-      {"gameName": "PlayerTwo", "tagLine": "EUW"},
-      {"gameName": "PlayerThree", "tagLine": "EUW"},
-      {"gameName": "PlayerFour", "tagLine": "EUW"},
-      {"gameName": "PlayerFive", "tagLine": "EUW"}
+      {"gameName": "INT PlatinPeaker", "tagLine": "INT"},
+      {"gameName": "INT Elowatcher", "tagLine": "Noc"},
+      {"gameName": "INT Centre", "tagLine": "EUW"},
+      {"gameName": "INT Kenski", "tagLine": "EUW"},
+      {"gameName": "INT James Otter", "tagLine": "007"}
     ],
     "discovered_games": []
   }
